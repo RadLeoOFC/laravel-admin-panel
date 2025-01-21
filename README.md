@@ -1,66 +1,129 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel Admin Panel
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Description
+This project is an educational project for creating an admin panel using the Laravel framework. It demonstrates the process of setting up the development environment, creating a Laravel project, and interacting with Git and GitHub.
 
-## About Laravel
+## Technologies Used
+- PHP: version 8.2.12
+- Composer: version 2.8.4
+- Laravel: version 5.11.2
+- MySQL (MariaDB): version 15.1 (Distrib 10.4.32-MariaDB)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Installation and Setup Steps
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 1. Install XAMPP
+XAMPP includes Apache and MySQL, which are required to run Laravel. Download and install XAMPP from the official XAMPP website  (https://www.apachefriends.org/index.html).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Once installed, open XAMPP and start the Apache and MySQL servers.
 
-## Learning Laravel
+### 2. Install Composer 
+Composer is used for managing dependencies in Laravel projects.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+1. Download and install Composer from the official website (https://getcomposer.org/download/).
+2. After installation, verify Composer is installed correctly by running the following command:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+   composer -v
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+You should see the version of Composer, for example: Composer version 2.8.4.
 
-## Laravel Sponsors
+### 3. Set Up System Environment Variables
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+To make Composer and PHP accessible from the command line, you need to set up system environment variables.
 
-### Premium Partners
+1. Open system properties:
+   – On Windows: Right-click on "This PC" → "Properties" → "Advanced system settings".
+   – Click on "Environment Variables".
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+2. Under "System Variables", add the following paths:
+   – PHP: C:\xampp\php
+   – Composer: C:\ProgramData\ComposerSetup\bin
 
-## Contributing
+3. Verify the settings by running the following commands in your terminal:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+   php -v
+   composer -v
 
-## Code of Conduct
+You should see the version of PHP and Composer, for example:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+    PHP version: PHP 8.2.12
+    Composer version: Composer version 2.8.4
 
-## Security Vulnerabilities
+### 4. Create a New Laravel Project
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. Navigate to the folder where you want to create the project (e.g., htdocs in XAMPP):
+   
+   cd C:\xampp\htdocs
 
-## License
+2. Create the Laravel project using the following command:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+laravel new internship-project
+
+During setup, select MySQL as the database.
+
+3. Navigate to the newly created project folder:
+
+cd internship-project
+
+4. Run the Laravel development server:
+
+php artisan serve
+
+5. Open your browser and visit the following URL to access the Laravel application: http://127.0.0.1:8000
+
+You should see the default Laravel welcome page.
+
+### 5. Initialize Git Repository and Set Up GitHub
+
+1. Create a new repository on GitHub named laravel-admin-panel.
+
+2. Initialize a local Git repository in your project folder:
+
+   git init
+
+3. Add the remote repository URL from GitHub:
+
+git remote add origin <GitHub_Repository_URL>
+
+4. Commit the initial Laravel setup:
+
+git add .
+git commit -m "Initial Laravel project setup"
+
+5. Push the changes to GitHub:
+
+git push -u origin main
+
+### 6. Familiarize with Laravel Structure
+
+The project follows the standard Laravel structure:
+
+- `app/`  
+  Contains the business logic of the application, including models and controllers.
+
+- `routes/web.php`  
+  Defines the routes for handling HTTP requests.
+
+- `resources/views/`  
+  Contains the views, which use Blade templates for rendering HTML.
+
+- `public/`  
+  Stores public files such as images, styles, and scripts.
+
+### 7. Best Practices
+
+– Do not add `.env` file to the repository.  
+  Ensure it is listed in .gitignore to protect sensitive information such as database credentials and API keys.
+
+– Use meaningful commit messages.  
+  Example:  
+
+  git commit -m "Add user authentication routes"
+
+Documentation
+
+    Official Laravel Documentation https://laravel.com/docs/11.x
+    Composer Documentation https://getcomposer.org/doc/
+
+Author
+
+This project was created by Radislav Lebedev as part of an educational internship to demonstrate working with the Laravel framework.
