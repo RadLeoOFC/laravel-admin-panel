@@ -82,7 +82,7 @@ You should see the default Laravel welcome page.
 
 3. Add the remote repository URL from GitHub:
 
-git remote add origin <GitHub_Repository_URL>
+git remote add origin https://github.com/RadLeoOFC/laravel-admin-panel
 
 4. Commit the initial Laravel setup:
 
