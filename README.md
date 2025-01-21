@@ -1,5 +1,6 @@
 # Laravel Admin Panel
 
+
 ## Description
 This project is an educational project for creating an admin panel using the Laravel framework. It demonstrates the process of setting up the development environment, creating a Laravel project, and interacting with Git and GitHub.
 
@@ -26,7 +27,9 @@ Composer is used for managing dependencies in Laravel projects.
 
 You should see the version of Composer, for example: Composer version 2.8.4.
 
+
 ### 3. Set Up System Environment Variables
+
 
 To make Composer and PHP accessible from the command line, you need to set up system environment variables.
 
@@ -48,7 +51,9 @@ You should see the version of PHP and Composer, for example:
     PHP version: PHP 8.2.12
     Composer version: Composer version 2.8.4
 
+
 ### 4. Create a New Laravel Project
+
 
 1. Navigate to the folder where you want to create the project (e.g., htdocs in XAMPP):
    
@@ -72,7 +77,9 @@ php artisan serve
 
 You should see the default Laravel welcome page.
 
+
 ### 5. Initialize Git Repository and Set Up GitHub
+
 
 1. Create a new repository on GitHub named laravel-admin-panel.
 
@@ -87,13 +94,16 @@ git remote add origin <GitHub_Repository_URL>
 4. Commit the initial Laravel setup:
 
 git add .
-git commit -m "Initial Laravel project setup"
+git commit -m  "Initial Laravel project setup"
+
 
 5. Push the changes to GitHub:
 
 git push -u origin main
 
+
 ### 6. Familiarize with Laravel Structure
+
 
 The project follows the standard Laravel structure:
 
@@ -109,7 +119,9 @@ The project follows the standard Laravel structure:
 - `public/`  
   Stores public files such as images, styles, and scripts.
 
+
 ### 7. Best Practices
+
 
 – Do not add `.env` file to the repository.  
   Ensure it is listed in .gitignore to protect sensitive information such as database credentials and API keys.
