@@ -18,6 +18,7 @@
                         <th>Price</th>
                         <th>Description</th>
                         <th>Actions</th>
+                        <th>Category</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -34,6 +35,7 @@
                                 <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this product?')">Delete</button>
                             </form>
                         </td>
+                        <td>{{ $product->category->name ?? 'No Category' }}</td>
                     </tr>
                     @endforeach
                 </tbody>
