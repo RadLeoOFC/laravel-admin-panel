@@ -12,7 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
+
             $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('cascade');
+
+            if (!Schema::hasColumn('products', 'category_id')) {
+                $table->unsignedBigInteger('category_id')->nullable();
+                $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            }
+
         });
     }
 
@@ -22,7 +29,12 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('products', function (Blueprint $table) {
+
             //
+
+            $table->dropForeign(['category_id']);
+            $table->dropColumn('category_id');
+
         });
     }
 };
