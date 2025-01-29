@@ -7,8 +7,8 @@
     <h1>Create Product</h1>
 
     @if ($errors->any())
-        <div>
-            <strong>Whoops! Something went wrong.</strong>
+        <div class="alert alert-danger">
+            <strong>Error!</strong> Please correct the following errors:
             <ul>
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -32,9 +32,9 @@
             <textarea name="description" id="description">{{ old('description') }}</textarea>
         </div>
         <div class="form-group">
-            <label for="category_id">Категория</label>
+            <label for="category_id">Category</label>
             <select name="category_id" id="category_id" class="form-control">
-                <option value="">Выберите категорию</option>
+                <option value="">Select category</option>
                 @foreach($categories as $category)
                     <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
                         {{ $category->name }}
@@ -43,8 +43,8 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="new_category">Или создайте новую категорию:</label>
-            <input type="text" name="new_category" id="new_category" class="form-control" placeholder="Введите новую категорию">
+            <label for="new_category">Or create a new category:</label>
+            <input type="text" name="new_category" id="new_category" class="form-control" placeholder="Enter a new category">
         </div>
         <div>
             <button type="submit">Create</button>

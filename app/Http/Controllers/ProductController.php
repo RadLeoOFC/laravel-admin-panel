@@ -11,11 +11,18 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+
+    public function index(Request $request) // Передаем Request в метод
     {
-        // Загрузка всех продуктов вместе с категориями (для оптимизации запросов)
-        $products = Product::with('category')->get();
-        return view('products.index', compact('products'));
+         // Получаем запрос из строки поиска
+         $search = $request->input('search');
+     
+         // Запрашиваем продукты с их категориями и применяем поиск
+         $products = Product::with('category')
+             ->where('name', 'LIKE', "%$search%")
+             ->paginate(10); // Пагинация на 10 элементов
+     
+         return view('products.index', compact('products'));
     }
 
     /**
@@ -33,17 +40,18 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        // Валидация входных данных
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric',
+            'name' => 'required|string|max:255|unique:products,name', // Название должно быть уникальным
+            'price' => 'required|numeric|min:0|max:999999.99', // Ограничение цены
             'description' => 'nullable|string',
             'category_id' => 'nullable|exists:categories,id', // Проверка, что категория существует
-            'new_category' => 'nullable|string|max:255', // Новая категория (необязательно)
+            'new_category' => 'nullable|string|max:255',
         ]);
     
-        // Если введена новая категория, создаём её
+        // Если введена новая категория, проверяем, существует ли она
         if ($request->filled('new_category')) {
-            $category = Category::create(['name' => $request->new_category]);
+            $category = Category::firstOrCreate(['name' => $request->new_category]); // Ищем или создаём
             $validated['category_id'] = $category->id; // Привязываем продукт к новой категории
         }
     
@@ -52,6 +60,7 @@ class ProductController extends Controller
     
         return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
+    
 
     /**
      * Display the specified resource.
@@ -76,24 +85,27 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        // Добавлена валидация поля category_id
+        // Валидация входных данных
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric',
+            'name' => 'required|string|max:255|unique:products,name,' . $product->id, // Уникальное имя (исключая текущий продукт)
+            'price' => 'required|numeric|min:0|max:999999.99',
             'description' => 'nullable|string',
-            'category_id' => 'nullable|exists:categories,id', // Проверка, что категория существует
+            'category_id' => 'nullable|exists:categories,id', 
             'new_category' => 'nullable|string|max:255',
         ]);
-
+    
+        // Если введена новая категория, ищем её или создаём
         if ($request->filled('new_category')) {
-            $category = Category::create(['name' => $request->new_category]);
-            $validated['category_id'] = $category->id; // Привязываем продукт к новой категории
+            $category = Category::firstOrCreate(['name' => $request->new_category]); 
+            $validated['category_id'] = $category->id;
         }
-
-        // Обновление продукта с привязкой к категории
+    
+        // Обновление продукта
         $product->update($validated);
+        
         return redirect()->route('products.index')->with('success', 'Product updated successfully.');
     }
+    
 
     /**
      * Remove the specified resource from storage.

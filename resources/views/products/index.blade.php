@@ -8,6 +8,15 @@
     <div class="container mt-4">
         <h1>Products</h1>
         <a href="{{ route('products.create') }}" class="btn btn-primary mb-3">Add Product</a>
+
+        <!-- Форма поиска -->
+        <form method="GET" action="{{ route('products.index') }}" class="mb-3">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Search by name..." value="{{ request('search') }}">
+                <button type="submit" class="btn btn-secondary">Search</button>
+            </div>
+        </form>
+
         @if ($products->isEmpty())
             <p>No products available.</p>
         @else
@@ -40,6 +49,11 @@
                     @endforeach
                 </tbody>
             </table>
+
+            <!-- Добавляем пагинацию -->
+            <div class="mt-3">
+                {{ $products->links('pagination::bootstrap-5') }}
+            </div>
         @endif
     </div>
 </body>
