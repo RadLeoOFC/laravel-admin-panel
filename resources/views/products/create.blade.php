@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Create Product</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <h1>Create Product</h1>
@@ -11,7 +12,7 @@
             <strong>Error!</strong> Please correct the following errors:
             <ul>
                 @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
+                    <li class="text-danger">{{ $error }}</li>
                 @endforeach
             </ul>
         </div>
@@ -33,7 +34,7 @@
         </div>
         <div class="form-group">
             <label for="category_id">Category</label>
-            <select name="category_id" id="category_id" class="form-control">
+            <select name="category_id" id="category_id" class="mb-3">
                 <option value="">Select category</option>
                 @foreach($categories as $category)
                     <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
@@ -44,7 +45,7 @@
         </div>
         <div class="form-group">
             <label for="new_category">Or create a new category:</label>
-            <input type="text" name="new_category" id="new_category" class="form-control" placeholder="Enter a new category">
+            <input type="text" name="new_category" id="new_category" class="mb-3" placeholder="Enter a new category">
         </div>
         <div>
             <button type="submit">Create</button>

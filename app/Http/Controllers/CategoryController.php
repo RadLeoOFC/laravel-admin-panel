@@ -4,15 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Services\CategoryService;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $categoryService;
+
+    public function __construct(CategoryService $categoryService)
+    {
+        $this->categoryService = $categoryService;
+    }
+
     public function index()
     {
-        $categories = Category::all();
+        $categories = $this->categoryService->getAllCategories();
         return view('categories.index', compact('categories'));
     }
 
@@ -33,9 +38,7 @@ class CategoryController extends Controller
             'name' => 'required|string|max:255|unique:categories',
         ]);
 
-        Category::create([
-            'name' => $request->name,
-        ]);
+        $this->categoryService->createCategory($request->only('name'));
 
         return redirect()->route('categories.index')->with('success', 'Category created successfully.');
     }
@@ -53,7 +56,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        return view('categories.edit', compact('category_id'));
+        return view('categories.edit', compact('category'));
     }
 
     /**
@@ -65,9 +68,7 @@ class CategoryController extends Controller
             'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
         ]);
 
-        $category->update([
-            'name' => $request->name,
-        ]);
+        $this->categoryService->updateCategory($category, $request->only('name'));
 
         return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
     }
@@ -77,7 +78,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        $category->delete();
+        $this->categoryService->deleteCategory($category);
+
         return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
     }
 }

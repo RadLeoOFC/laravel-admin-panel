@@ -5,24 +5,31 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use App\Services\ProductService;
+use Illuminate\Support\Facades\Cache;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $productService;
 
-    public function index(Request $request) // Передаем Request в метод
+    public function __construct(ProductService $productService)
     {
-         // Получаем запрос из строки поиска
-         $search = $request->input('search');
-     
-         // Запрашиваем продукты с их категориями и применяем поиск
-         $products = Product::with('category')
-             ->where('name', 'LIKE', "%$search%")
-             ->paginate(10); // Пагинация на 10 элементов
-     
-         return view('products.index', compact('products'));
+        $this->productService = $productService;
+    }
+
+    public function index(Request $request)
+    {
+        $search = $request->input('search');
+        $page = $request->input('page', 1); // Get the current page (default is 1)
+    
+        // Include the page in the cache key to store separate cache entries for each page
+        $cacheKey = "products_search_{$search}_page_{$page}";
+    
+        $products = Cache::remember($cacheKey, 600, function () use ($search) {
+            return $this->productService->getAllProducts($search);
+        });
+    
+        return view('products.index', compact('products'));
     }
 
     /**
@@ -30,37 +37,28 @@ class ProductController extends Controller
      */
     public function create()
     {
-        // Передаём все категории для выпадающего списка в форме
+        // Passing all categories to the drop-down list in the form
         $categories = Category::all();
         return view('products.create', compact('categories'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        // Валидация входных данных
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:products,name', // Название должно быть уникальным
-            'price' => 'required|numeric|min:0|max:999999.99', // Ограничение цены
+            'name' => 'required|string|max:255|unique:products,name',
+            'price' => 'required|numeric|min:0|max:999999.99',
             'description' => 'nullable|string',
-            'category_id' => 'nullable|exists:categories,id', // Проверка, что категория существует
+            'category_id' => 'nullable|exists:categories,id',
             'new_category' => 'nullable|string|max:255',
         ]);
-    
-        // Если введена новая категория, проверяем, существует ли она
-        if ($request->filled('new_category')) {
-            $category = Category::firstOrCreate(['name' => $request->new_category]); // Ищем или создаём
-            $validated['category_id'] = $category->id; // Привязываем продукт к новой категории
-        }
-    
-        // Создаём продукт
-        Product::create($validated);
-    
+
+        $this->productService->createProduct($validated);
+
+        // Clear the cache after adding a new product
+        Cache::forget("products_search_");
+
         return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
-    
 
     /**
      * Display the specified resource.
@@ -75,45 +73,36 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        // Передаём продукт и категории в форму редактирования
+        // We transfer the product and categories to the editing form
         $categories = Category::all();
         return view('products.edit', compact('product', 'categories'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Product $product)
     {
-        // Валидация входных данных
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:products,name,' . $product->id, // Уникальное имя (исключая текущий продукт)
+            'name' => 'required|string|max:255|unique:products,name,' . $product->id,
             'price' => 'required|numeric|min:0|max:999999.99',
             'description' => 'nullable|string',
-            'category_id' => 'nullable|exists:categories,id', 
+            'category_id' => 'nullable|exists:categories,id',
             'new_category' => 'nullable|string|max:255',
         ]);
-    
-        // Если введена новая категория, ищем её или создаём
-        if ($request->filled('new_category')) {
-            $category = Category::firstOrCreate(['name' => $request->new_category]); 
-            $validated['category_id'] = $category->id;
-        }
-    
-        // Обновление продукта
-        $product->update($validated);
-        
+
+        $this->productService->updateProduct($product, $validated);
+
+        // Clear cache after updating a product
+        Cache::forget("products_search_");
+
         return redirect()->route('products.index')->with('success', 'Product updated successfully.');
     }
-    
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Product $product)
     {
-        $product->delete();
+        $this->productService->deleteProduct($product);
+
+        // Clear cache after deleting a product
+        Cache::forget("products_search_");
+
         return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
     }
 }
-
