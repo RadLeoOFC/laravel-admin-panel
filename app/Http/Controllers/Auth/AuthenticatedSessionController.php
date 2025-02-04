@@ -8,16 +8,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-use App\Services\AuthService;
 
 class AuthenticatedSessionController extends Controller
 {
-    protected $authService;
-
-    public function __construct(AuthService $authService)
-    {
-        $this->authService = $authService;
-    }
     /**
      * Display the login view.
      */
@@ -31,20 +24,24 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        if (!$this->authService->login($request->validated())) {
-            return back()->withErrors(['email' => 'Invalid credentials.']);
-        }
+        $request->authenticate();
 
-        return redirect()->intended(route('dashboard'));
+        $request->session()->regenerate();
+
+        return redirect()->intended(route('dashboard', absolute: false));
     }
 
     /**
      * Destroy an authenticated session.
      */
+    public function destroy(Request $request): RedirectResponse
+    {
+        Auth::guard('web')->logout();
 
-     public function destroy(Request $request): RedirectResponse
-     {
-         $this->authService->logout();
-         return redirect('/');
-     }
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect('/');
+    }
 }
