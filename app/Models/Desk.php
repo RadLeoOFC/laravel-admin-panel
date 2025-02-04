@@ -11,5 +11,10 @@ class Desk extends Model
     use HasFactory;
     
     protected $fillable = ['name', 'location', 'status'];
+
+    public function memberships()
+    {
+        return $this->hasMany(Membership::class);
+    }
 }
 
