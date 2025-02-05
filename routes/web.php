@@ -4,6 +4,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DeskController;
+use App\Http\Controllers\MembershipController;
 use Illuminate\Support\Facades\Route;
 
 // Home page route
@@ -25,6 +26,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('products', ProductController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('desks', DeskController::class);
+    Route::resource('memberships', MembershipController::class)->middleware('auth');
 });
 
 // User profile management (only for authenticated users)
