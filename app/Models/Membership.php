@@ -10,7 +10,8 @@ class Membership extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'desk_id', 'start_date', 'end_date', 'membership_type', 'price'
+        'user_id', 'desk_id', 'start_date', 'end_date', 'membership_type', 'price', 
+        'amount_paid', 'payment_status', 'payment_method', 'transaction_reference'
     ];
 
     public function user()

@@ -27,6 +27,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('categories', CategoryController::class);
     Route::resource('desks', DeskController::class);
     Route::resource('memberships', MembershipController::class)->middleware('auth');
+    Route::post('/memberships/{id}/extend', [MembershipController::class, 'extend'])->name('memberships.extend');
+    Route::post('/memberships/{id}/update-payment', [MembershipController::class, 'updatePaymentStatus'])->name('memberships.updatePayment');
 });
 
 // User profile management (only for authenticated users)

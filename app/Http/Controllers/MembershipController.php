@@ -7,6 +7,33 @@ use Illuminate\Http\Request;
 
 class MembershipController extends Controller
 {
+
+    public function extend(Request $request, $id)
+    {
+        $membership = Membership::findOrFail($id);
+
+        // Extend membership for another period (e.g., 1 month)
+        $membership->end_date = \Carbon\Carbon::parse($membership->end_date)->addMonth();
+        $membership->payment_status = 'pending'; // Mark payment as pending until paid
+        $membership->save();
+
+        return redirect()->back()->with('success', 'Membership extended successfully!');
+    }
+
+    
+    public function updatePaymentStatus(Request $request, $id)
+    {
+        $membership = Membership::findOrFail($id);
+
+        $membership->amount_paid = $request->amount_paid;
+        $membership->payment_status = $request->payment_status;
+        $membership->payment_method = $request->payment_method;
+        $membership->transaction_reference = $request->transaction_reference;
+        $membership->save();
+
+        return redirect()->back()->with('success', 'Payment details updated successfully!');
+    }
+
     /**
      * Display a listing of the resource.
      */

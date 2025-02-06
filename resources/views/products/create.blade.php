@@ -21,19 +21,19 @@
     <form action="{{ route('products.store') }}" method="POST">
         @csrf
         <div>
-            <label for="name">Name:</label>
+            <label for="name" class="form-label">Name:</label>
             <input type="text" name="name" id="name" value="{{ old('name') }}" required>
         </div>
         <div>
-            <label for="price">Price:</label>
+            <label for="price" class="form-label">Price:</label>
             <input type="text" name="price" id="price" value="{{ old('price') }}" required>
         </div>
         <div>
-            <label for="description">Description:</label>
+            <label for="description" class="form-label">Description:</label>
             <textarea name="description" id="description">{{ old('description') }}</textarea>
         </div>
         <div class="form-group">
-            <label for="category_id">Category</label>
+            <label for="category_id" class="form-label">Category</label>
             <select name="category_id" id="category_id" class="mb-3">
                 <option value="">Select category</option>
                 @foreach($categories as $category)
@@ -44,11 +44,11 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="new_category">Or create a new category:</label>
+            <label for="new_category" class="form-label">Or create a new category:</label>
             <input type="text" name="new_category" id="new_category" class="mb-3" placeholder="Enter a new category">
         </div>
         <div>
-            <button type="submit">Create</button>
+            <button type="submit" class="btn btn-success">Create</button>
         </div>
     </form>
 
