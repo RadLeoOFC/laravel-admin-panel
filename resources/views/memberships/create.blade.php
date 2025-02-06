@@ -30,13 +30,20 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="desk_id" class="form-label">Desk</label>
+                    <label for="desk_id" class="form-label">Выберите рабочее место:</label>
                     <select name="desk_id" id="desk_id" class="form-select">
                         @foreach($desks as $desk)
                             <option value="{{ $desk->id }}">{{ $desk->name }}</option>
                         @endforeach
                     </select>
+
+                    @if ($errors->has('desk_id'))
+                        <div class="alert alert-danger mt-2">
+                            {{ $errors->first('desk_id') }}
+                        </div>
+                    @endif
                 </div>
+
 
                 <div class="mb-3">
                     <label for="membership_type" class="form-label">Membership Type</label>

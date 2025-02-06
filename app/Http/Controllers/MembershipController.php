@@ -33,6 +33,7 @@ class MembershipController extends Controller
      */
     public function store(Request $request)
     {
+        // Validate input data
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'desk_id' => 'required|exists:desks,id',
@@ -42,6 +43,17 @@ class MembershipController extends Controller
             'price' => 'nullable|numeric|min:0',
         ]);
     
+        // Check if the selected desk is already booked in the requested period
+        $existing = Membership::where('desk_id', $request->desk_id)
+            ->whereDate('start_date', '<=', $request->end_date)
+            ->whereDate('end_date', '>=', $request->start_date)
+            ->get(); // Retrieve all conflicting bookings
+    
+        if ($existing->count() > 0) {
+            return back()->withErrors(['desk_id' => 'Desk is already booked in this period.']);
+        }
+    
+        // Create a new membership record if the desk is available
         Membership::create($request->all());
     
         return redirect()->route('memberships.index')->with('success', 'Membership created successfully!');
@@ -56,6 +68,7 @@ class MembershipController extends Controller
         //
     }
 
+    
     /**
      * Show the form for editing the specified resource.
      */
