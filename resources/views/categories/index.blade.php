@@ -5,9 +5,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    @extends('layouts.app')
 
-    @section('content')
     <div class="container">
         <h1 class="mb-4">Categories</h1>
         <a href="{{ route('categories.create') }}" class="btn btn-primary mb-3">Add Category</a>
@@ -18,7 +16,7 @@
             </div>
         @endif
 
-        <table class="table">
+        <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -42,7 +40,7 @@
             </tbody>
         </table>
     </div>
-    @endsection
+
    
 </body>
 </html>
