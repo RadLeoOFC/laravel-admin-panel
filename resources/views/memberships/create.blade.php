@@ -30,7 +30,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="desk_id" class="form-label">Выберите рабочее место:</label>
+                    <label for="desk_id" class="form-label">Select a desk:</label>
                     <select name="desk_id" id="desk_id" class="form-select">
                         @foreach($desks as $desk)
                             <option value="{{ $desk->id }}">{{ $desk->name }}</option>

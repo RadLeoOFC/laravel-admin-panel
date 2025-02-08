@@ -7,42 +7,46 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="mb-4">Desks</h1>
-        <a href="{{ route('desks.create') }}" class="btn btn-primary mb-3">Create New Desk</a>
+    @extends('layouts.app')
 
-        @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
+    @section('content')
+        <div class="container mt-5">
+            <h1 class="mb-4">Desks</h1>
+            <a href="{{ route('desks.create') }}" class="btn btn-primary mb-3">Create New Desk</a>
 
-        
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Location</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($desks as $desk)
-                <tr>
-                    <td>{{ $desk->name }}</td>
-                    <td>{{ $desk->location }}</td>
-                    <td>{{ $desk->status }}</td>
-                    <td>
-                        <a href="{{ route('desks.edit', $desk->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('desks.destroy', $desk->id) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+            @if(session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+
+            
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($desks as $desk)
+                    <tr>
+                        <td>{{ $desk->name }}</td>
+                        <td>{{ $desk->location }}</td>
+                        <td>{{ $desk->status }}</td>
+                        <td>
+                            <a href="{{ route('desks.edit', $desk->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <form action="{{ route('desks.destroy', $desk->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @endsection
 </body>
 </html>
