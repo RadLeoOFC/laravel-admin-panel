@@ -17,11 +17,11 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans antialiased bg-light d-flex flex-column min-vh-100">
+<body class="font-sans antialiased bg-light d-flex flex-column min-vh-90">
     <div class="container-fluid flex-grow-1">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-md-3 bg-white vh-100 shadow-sm p-3">
+            <div class="col-md-3 bg-white vh-90 shadow-sm p-3">
                 @include('layouts.sidebar')
             </div>
             
@@ -58,8 +58,5 @@
             });
         });
     </script>
-
-
-
 </body>
 </html>

@@ -9,7 +9,7 @@ class ProductSeeder extends Seeder
 {
     public function run()
     {
-        Product::factory(10)->create(); // Создаст 10 продуктов
+        Product::factory(10)->create(); // Will create 10 products
     }
 }
 

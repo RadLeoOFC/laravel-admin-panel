@@ -43,10 +43,6 @@
                 @endforeach
             </select>
         </div>
-        <div class="form-group">
-            <label for="new_category" class="form-label">Or create a new category:</label>
-            <input type="text" name="new_category" id="new_category" class="mb-3" placeholder="Enter a new category">
-        </div>
         <div>
             <button type="submit" class="btn btn-success">Create</button>
         </div>

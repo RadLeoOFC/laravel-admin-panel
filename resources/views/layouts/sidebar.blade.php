@@ -1,4 +1,4 @@
-<div class="d-flex flex-column flex-shrink-0 p-3 bg-white vh-100 shadow-sm">
+<div class="d-flex flex-column flex-shrink-0 p-3 bg-white shadow-sm sidebar">
     <a href="{{ url('/') }}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none">
         <span class="fs-4 fw-bold">Admin panel</span>
     </a>
@@ -27,11 +27,10 @@
     </ul>
     <hr>
     <div class="dropdown">
-    <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="navbarDropdownSidebar" data-bs-toggle="dropdown">
-        <strong>{{ Auth::user()->name ?? 'Администратор' }}</strong>
-    </a>
+        <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="navbarDropdownSidebar" data-bs-toggle="dropdown">
+            <strong>{{ Auth::user()->name ?? 'Администратор' }}</strong>
+        </a>
         <ul class="dropdown-menu" aria-labelledby="navbarDropdownSidebar">
-
             <li><a class="dropdown-item" href="#">Profile</a></li>
             <li>
                 <form method="POST" action="{{ route('logout') }}">
