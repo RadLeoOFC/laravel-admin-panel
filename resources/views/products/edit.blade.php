@@ -22,15 +22,15 @@
     <form action="{{ route('products.update', $product->id) }}" method="POST">
         @csrf
         @method('PUT')
-        <div>
+        <div class="mb-3">
             <label for="name">Name:</label>
             <input type="text" name="name" id="name" value="{{ old('name', $product->name) }}" required>
         </div>
-        <div>
+        <div class="mb-3">
             <label for="price">Price:</label>
             <input type="text" name="price" id="price" value="{{ old('price', $product->price) }}" required>
         </div>
-        <div>
+        <div class="mb-3">
             <label for="description">Description:</label>
             <textarea name="description" id="description">{{ old('description', $product->description) }}</textarea>
         </div>
@@ -45,13 +45,8 @@
                 @endforeach
             </select>
         </div>
-        <div class="form-group">
-            <label for="new_category">Or create a new category:</label>
-            <input type="text" name="new_category" id="new_category" class="mb-3" placeholder="Enter a new category">
-        </div>
-
         <div>
-            <button type="submit">Update</button>
+            <button type="submit" class="btn btn-success">Update</button>
         </div>
     </form>
 

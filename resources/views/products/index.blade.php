@@ -9,7 +9,7 @@
         <h1>Products</h1>
         <a href="{{ route('products.create') }}" class="btn btn-primary mb-3">Add Product</a>
 
-        <!-- Форма поиска -->
+        <!-- Search form -->
         <form method="GET" action="{{ route('products.index') }}" class="mb-3">
             <div class="input-group">
                 <input type="text" name="search" class="form-control" placeholder="Search by name..." value="{{ request('search') }}">
@@ -50,7 +50,7 @@
                 </tbody>
             </table>
 
-            <!-- Добавляем пагинацию -->
+            <!-- Adding pagination -->
             <div class="mt-3">
                 {{ $products->links('pagination::bootstrap-5') }}
             </div>
