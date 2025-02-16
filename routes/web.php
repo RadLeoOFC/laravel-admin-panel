@@ -30,13 +30,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Desk and membership management
     Route::resource('desks', DeskController::class);
     Route::resource('memberships', MembershipController::class);
-
-    // Additional membership-related routes
     Route::post('/memberships/{id}/extend', [MembershipController::class, 'extend'])->name('memberships.extend');
-    Route::post('/memberships/{id}/update-payment', [MembershipController::class, 'updatePaymentStatus'])->name('memberships.updatePayment');
 
-    // 📌 Added route for reports
-    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::middleware('admin')->group(function () {
+        // Additional membership-related route
+        Route::post('/memberships/{id}/update-payment', [MembershipController::class, 'updatePaymentStatus'])->name('memberships.updatePayment');
+
+        // 📌 Added route for reports
+        Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    });
 });
 
 // User profile management (restricted to authenticated users)
