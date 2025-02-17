@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Routing\Controller;
 use App\Models\Membership;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MembershipCreated;
 
 class MembershipController extends Controller
 {
@@ -14,7 +16,7 @@ class MembershipController extends Controller
      */
     public function __construct()
     {
-        // Only admin users can extend memberships and update payment statuses
+        // Only admin users can update payment statuses
         $this->middleware('admin')->only(['updatePaymentStatus']);
     }
 
@@ -79,7 +81,7 @@ class MembershipController extends Controller
         }
     
         // Create membership (admins can assign any user, regular users can only assign themselves)
-        Membership::create([
+        $membership = Membership::create([
             'user_id' => $request->user_id,
             'desk_id' => $request->desk_id,
             'start_date' => $request->start_date,
@@ -88,7 +90,10 @@ class MembershipController extends Controller
             'price' => $request->price,
         ]);
     
-        return redirect()->route('memberships.index')->with('success', 'Membership created successfully!');
+        // Send email notification to the user
+        Mail::to($membership->user->email)->send(new MembershipCreated($membership));
+
+        return redirect()->route('memberships.index')->with('success', 'Membership created successfully and email sent!');
     }
 
     /**
