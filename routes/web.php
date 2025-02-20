@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DeskController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 // Home page route
@@ -31,6 +32,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('desks', DeskController::class);
     Route::resource('memberships', MembershipController::class);
     Route::post('/memberships/{id}/extend', [MembershipController::class, 'extend'])->name('memberships.extend');
+
+    Route::get('/payment/{membership_id}', [PaymentController::class, 'showPaymentForm'])->name('payment.form');
+    Route::post('/payment/process', [PaymentController::class, 'processPayment'])->name('payment.process');
+
 
     Route::middleware('admin')->group(function () {
         // Additional membership-related route

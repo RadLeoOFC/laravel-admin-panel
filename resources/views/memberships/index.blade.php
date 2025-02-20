@@ -55,6 +55,10 @@
                         <button type="submit" class="btn btn-primary btn-sm">Extend Membership</button>
                     </form>
 
+                    @if($membership->payment_status !== 'paid')
+                        <a href="{{ route('payment.form', $membership->id) }}" class="btn btn-success btn-sm">Pay Now</a>
+                    @endif
+
                     <!-- Payment Update Form -->
                     <form action="{{ route('memberships.updatePayment', $membership->id) }}" method="POST" class="mt-2">
                         @csrf

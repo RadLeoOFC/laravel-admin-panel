@@ -24,6 +24,10 @@ class Membership extends Model
         return $this->belongsTo(Desk::class);
     }
 
+    public function payments() {
+        return $this->hasMany(Payment::class);
+    } 
+
     
     public function scopeActive($query)
     {
@@ -31,7 +35,6 @@ class Membership extends Model
             $q->whereNull('end_date')
             ->orWhere('end_date', '>=', now());
         });
-    }
-
+    }   
 }
 
