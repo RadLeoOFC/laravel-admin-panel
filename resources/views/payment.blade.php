@@ -56,9 +56,6 @@
     </div>
 </div>
 
-<!-- Include Stripe.js -->
-<script src="https://js.stripe.com/v3/"></script>
-
 <script>
     var stripe = Stripe("{{ env('STRIPE_KEY') }}"); // Initialize Stripe with the public key
     var elements = stripe.elements();
