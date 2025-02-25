@@ -11,7 +11,7 @@
 
     @section('content')
         <div class="container mt-5">
-            <h1 class="mb-4">Desks</h1>
+            <h1 class="fw-bold mb-3" style="font-size: 28px;">Desks</h1>
             <a href="{{ route('desks.create') }}" class="btn btn-primary mb-3">Create New Desk</a>
 
             @if(session('success'))

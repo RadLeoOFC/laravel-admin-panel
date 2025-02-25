@@ -11,7 +11,7 @@
 
 @section('content')
     <div class="container mt-4">  
-        <h2>Memberships</h2>
+        <h2 class="fw-bold mb-3" style="font-size: 28px;">Memberships</h2>
         <a href="{{ route('memberships.create') }}" class="btn btn-primary mb-3">Create Membership</a>
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>

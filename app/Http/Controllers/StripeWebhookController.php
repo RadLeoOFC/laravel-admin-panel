@@ -10,13 +10,10 @@ use Stripe\Stripe;
 use Stripe\Webhook;
 use Stripe\Event;
 
-class WebhookController extends Controller
+class StripeWebhookController extends Controller
 {
     public function handle(Request $request)
     {
-        \Log::info("Webhook received", $request->all());
-        return response()->json(['status' => 'success'], 200);
-        
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
         // Retrieve JSON data from Stripe
@@ -37,10 +34,10 @@ class WebhookController extends Controller
 
         // Handle different types of events
         switch ($event->type) {
-            case 'payment_intent.succeeded':  // Payment was successful
+            case 'payment_intent.succeeded':  
                 $this->handleSuccessfulPayment($event->data->object);
                 break;
-            case 'payment_intent.payment_failed':  // Payment failed
+            case 'payment_intent.payment_failed':  
                 $this->handleFailedPayment($event->data->object);
                 break;
         }

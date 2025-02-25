@@ -39,7 +39,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/payment/process', [PaymentController::class, 'processPayment'])->name('payment.process');
 
     // Route to handle incoming Stripe webhook events
-    Route::post('/webhook/stripe', [WebhookController::class, 'handle'])->name('webhook.stripe');
+    Route::post('/webhook/stripe', [StripeWebhookController::class, 'handle'])->name('webhook.stripe');
 
 
     Route::middleware('admin')->group(function () {
