@@ -28,7 +28,11 @@
                 <th>Payment Status</th>
                 <th>Payment Method</th>
                 <th>Transaction Reference</th>
-                <th>Actions</th>
+                @if(auth()->user()->role === 'admin')
+                    <th>Actions</th>
+                @else
+                    <th style="min-width: 350px;">Actions</th>
+                @endif
             </tr>
             @foreach($memberships as $membership)
             <tr>
@@ -42,39 +46,43 @@
                 <td>{{ $membership->payment_method ?? 'N/A' }}</td>
                 <td>{{ $membership->transaction_reference ?? 'N/A' }}</td>
                 <td>
-                    <a href="{{ route('memberships.edit', $membership->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                    <form action="{{ route('memberships.destroy', $membership->id) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this membership?')">Delete</button>
-                    </form>
+                    <div class="d-flex flex-wrap gap-1">
+                        @if(auth()->user()->role === 'admin')
+                            <a href="{{ route('memberships.edit', $membership->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                        @endif
+                        @if(auth()->user()->role === 'admin' || ($membership->payment_status !== 'paid' && $membership->amount_paid == 0))
+                            <form action="{{ route('memberships.destroy', $membership->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+                            </form>
+                        @else
+                            <button class="btn btn-secondary btn-sm" disabled>Cannot Delete</button>
+                        @endif
 
-                    <!-- Button for extending membership -->
-                    <form action="{{ route('memberships.extend', $membership->id) }}" method="POST" style="display:inline; margin-left: 5px;">
-                        @csrf
-                        <button type="submit" class="btn btn-primary btn-sm">Extend Membership</button>
-                    </form>
+                        <a href="{{ route('memberships.showExtendForm', $membership->id) }}" class="btn btn-primary btn-sm">Extend Membership</a>
 
-                    @if($membership->payment_status !== 'paid')
-                        <a href="{{ route('payment.form', $membership->id) }}" class="btn btn-success btn-sm">Pay Now</a>
+                        @if($membership->payment_status !== 'paid')
+                            <a href="{{ route('payment.form', $membership->id) }}" class="btn btn-success btn-sm">Pay Now</a>
+                        @endif
+                    </div>
+
+                    @if(auth()->user()->role === 'admin')
+                        <form action="{{ route('memberships.updatePayment', $membership->id) }}" method="POST" class="mt-2">
+                            @csrf
+                            <div class="input-group input-group-sm">
+                                <input type="number" name="amount_paid" placeholder="Amount" class="form-control" required>
+                                <select name="payment_status" class="form-select">
+                                    <option value="pending" {{ $membership->payment_status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                    <option value="paid" {{ $membership->payment_status == 'paid' ? 'selected' : '' }}>Paid</option>
+                                    <option value="failed" {{ $membership->payment_status == 'failed' ? 'selected' : '' }}>Failed</option>
+                                </select>
+                                <input type="text" name="payment_method" placeholder="Payment Method" class="form-control">
+                                <input type="text" name="transaction_reference" placeholder="Transaction Ref" class="form-control">
+                                <button type="submit" class="btn btn-success">Update</button>
+                            </div>
+                        </form>
                     @endif
-
-                    <!-- Payment Update Form -->
-                    <form action="{{ route('memberships.updatePayment', $membership->id) }}" method="POST" class="mt-2">
-                        @csrf
-                        <div class="input-group input-group-sm">
-                            <input type="number" name="amount_paid" placeholder="Amount" class="form-control" required>
-                            <select name="payment_status" class="form-select">
-                                <option value="pending" {{ $membership->payment_status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                <option value="paid" {{ $membership->payment_status == 'paid' ? 'selected' : '' }}>Paid</option>
-                                <option value="failed" {{ $membership->payment_status == 'failed' ? 'selected' : '' }}>Failed</option>
-                            </select>
-                            <input type="text" name="payment_method" placeholder="Payment Method" class="form-control">
-                            <input type="text" name="transaction_reference" placeholder="Transaction Ref" class="form-control">
-                            <button type="submit" class="btn btn-success">Update</button>
-                        </div>
-                    </form>
-
                 </td>
             </tr>
             @endforeach

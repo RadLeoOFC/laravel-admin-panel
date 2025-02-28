@@ -12,7 +12,9 @@
     @section('content')
         <div class="container mt-5">
             <h1 class="fw-bold mb-3" style="font-size: 28px;">Desks</h1>
-            <a href="{{ route('desks.create') }}" class="btn btn-primary mb-3">Create New Desk</a>
+            @if(auth()->user()->role === 'admin')
+                <a href="{{ route('desks.create') }}" class="btn btn-primary mb-3">Create New Desk</a>
+            @endif
 
             @if(session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
@@ -25,7 +27,9 @@
                         <th>Name</th>
                         <th>Location</th>
                         <th>Status</th>
-                        <th>Actions</th>
+                        @if(auth()->user()->role === 'admin')
+                            <th>Actions</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
@@ -34,14 +38,16 @@
                         <td>{{ $desk->name }}</td>
                         <td>{{ $desk->location }}</td>
                         <td>{{ $desk->status }}</td>
-                        <td>
-                            <a href="{{ route('desks.edit', $desk->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                            <form action="{{ route('desks.destroy', $desk->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
-                            </form>
-                        </td>
+                        @if(auth()->user()->role === 'admin')
+                            <td>
+                                <a href="{{ route('desks.edit', $desk->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                <form action="{{ route('desks.destroy', $desk->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+                                </form>
+                            </td>
+                        @endif
                     </tr>
                     @endforeach
                 </tbody>

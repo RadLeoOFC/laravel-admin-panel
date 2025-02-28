@@ -28,6 +28,10 @@ class Membership extends Model
         return $this->hasMany(Payment::class);
     } 
 
+    public function paymentsettings() {
+        return $this->hasMany(PaymentSetting::class);
+    } 
+
     
     public function scopeActive($query)
     {

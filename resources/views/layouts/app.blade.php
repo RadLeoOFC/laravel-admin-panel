@@ -19,9 +19,9 @@
 </head>
 <body class="font-sans antialiased bg-light d-flex flex-column min-vh-90">
     <div class="container-fluid flex-grow-1">
-        <div class="row">
+        <div class="row g-0">
             <!-- Sidebar -->
-            <div class="col-md-3 bg-white vh-90 shadow-sm p-3">
+            <div class="col-md-3 bg-white vh-90 shadow-sm">
                 @include('layouts.sidebar')
             </div>
             
@@ -30,7 +30,7 @@
                 @include('layouts.navigation')
 
                 @isset($header)
-                    <header class="bg-white shadow-sm mb-3 p-3">
+                    <header class="bg-white shadow-sm mb-3">
                         <div class="container">
                             {{ $header }}
                         </div>
