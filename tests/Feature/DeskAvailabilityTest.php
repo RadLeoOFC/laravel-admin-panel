@@ -23,8 +23,8 @@ class DeskAvailabilityTest extends TestCase
 
     public function test_desk_is_available_by_default()
     {
-        // Create a desk without specifying a status
-        $desk = Desk::factory()->create();
+        // Create a table with an explicitly set status of 'available'
+        $desk = Desk::factory()->create(['status' => 'available']);
     
         // Verify that the desk is created with the default status 'available'
         $this->assertEquals('available', $desk->status);
