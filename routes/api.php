@@ -23,6 +23,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/memberships/{membership}', [MembershipController::class, 'show']);
         Route::put('/memberships/{membership}', [MembershipController::class, 'update']);
         Route::delete('/memberships/{membership}', [MembershipController::class, 'destroy']);
+        Route::patch('/memberships/{membership}/pay', [MembershipController::class, 'pay']);
 
         Route::post('/logout', [AuthController::class, 'logout']);
     });
