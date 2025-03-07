@@ -10,7 +10,7 @@
     @extends('layouts.app')
 
     @section('content')
-        <div class="container mt-5">
+        <div class="container mt-4">
             <h1 class="fw-bold mb-3" style="font-size: 28px;">Desks</h1>
             @if(auth()->user()->role === 'admin')
                 <a href="{{ route('desks.create') }}" class="btn btn-primary mb-3">Create New Desk</a>

@@ -244,40 +244,47 @@ class MembershipController extends Controller
     public function extend(Request $request, $id)
     {
         $membership = Membership::findOrFail($id);
-
+    
+        // Ensure that a regular user can only modify their own memberships
         if (auth()->user()->role !== 'admin' && auth()->id() !== $membership->user_id) {
             abort(403, 'You can only modify your own memberships.');
         }
-
+    
         // Set payment_status to pending BEFORE validation
         if ($membership->payment_status === 'paid') {
             $membership->payment_status = 'pending';
             $membership->save();
         }
-
-        // Validate the date
+    
+        // Validate the new end date
         $request->validate([
             'new_end_date' => ['required', 'date', 'after:' . $membership->end_date],
         ]);
-
+    
         $currentEndDate = Carbon::parse($membership->end_date);
         $newEndDate = Carbon::parse($request->new_end_date);
-
+    
         // Check if the desk is already booked by another user
         $existing = Membership::where('desk_id', $membership->desk_id)
-            ->where('id', '!=', $membership->id)
-            ->whereDate('start_date', '<=', $newEndDate)
-            ->whereDate('end_date', '>=', $currentEndDate)
+            ->where('id', '!=', $membership->id) // Exclude the current record
+            ->where(function ($query) use ($currentEndDate, $newEndDate) {
+                $query->whereBetween('start_date', [$currentEndDate, $newEndDate])
+                      ->orWhereBetween('end_date', [$currentEndDate, $newEndDate])
+                      ->orWhere(function ($q) use ($currentEndDate, $newEndDate) {
+                          $q->where('start_date', '<=', $currentEndDate)
+                            ->where('end_date', '>=', $newEndDate);
+                      });
+            })
             ->exists();
-
+    
         if ($existing) {
-            return redirect()->back()->withErrors(['desk_id' => 'The desk is already booked for the selected period.'])->withInput();
+            return redirect()->back()->withErrors(['new_end_date' => 'The desk is already booked for the selected period.'])->withInput();
         }
-
+    
         // Determine the new membership_type
         $totalMonths = Carbon::parse($membership->start_date)->diffInMonths($newEndDate);
         $totalYears = Carbon::parse($membership->start_date)->diffInYears($newEndDate);
-
+    
         if ($totalYears >= 1) {
             $membership->membership_type = 'yearly';
         } elseif ($totalMonths >= 1) {
@@ -285,19 +292,19 @@ class MembershipController extends Controller
         } else {
             $membership->membership_type = 'daily';
         }
-
+    
         // Recalculate the membership price
         $newPrice = $this->calculateMembershipPrice($membership->membership_type, $membership->start_date, $newEndDate);
-
+    
         // Update membership data
         $membership->end_date = $newEndDate;
         $membership->price = $newPrice;
         $membership->save();
-
+    
         // Add a success message
         session()->flash('success', 'Membership extended successfully!');
         return redirect()->route('memberships.index');
-    }
+    }    
 
 
     private function calculateMembershipPrice($type, $startDate, $endDate)

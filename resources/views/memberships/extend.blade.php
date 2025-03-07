@@ -17,7 +17,7 @@
         <input type="date" name="new_end_date" id="new_end_date" class="form-control" value="{{ old('end_date', $membership->end_date) }}">
         @if ($errors->has('new_end_date'))
             <div class="alert alert-danger mt-2">
-                {{ $errors->first('end_date') }}
+                {{ $errors->first('new_end_date') }}
             </div>
         @endif
         <button type="submit" class="btn btn-primary" style="margin-top: 5px;">Extend Membership</button>

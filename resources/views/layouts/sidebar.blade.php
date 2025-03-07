@@ -46,6 +46,12 @@
                 </a>
             </li>
         @endif
+        <li class="nav-item">
+            <a href="{{ route('support.index') }}" class="nav-link {{ request()->routeIs('support.*') ? 'active' : 'text-dark' }}">
+                <i class="bi bi-clipboard-data"></i> Support
+            </a>
+        </li>
+
     </ul>
     <hr>
     <div class="dropdown">

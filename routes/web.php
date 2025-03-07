@@ -10,6 +10,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\PaymentSettingsController;
+use App\Http\Controllers\SupportTicketController;
 use Illuminate\Support\Facades\Route;
 
 // Home page route
@@ -45,6 +46,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Route to handle incoming Stripe webhook events
     Route::post('/webhook/stripe', [StripeWebhookController::class, 'handle'])->name('webhook.stripe');
 
+    // Routes for technical support
+    Route::get('/support', [SupportTicketController::class, 'index'])->name('support.index');
+    Route::post('/support', [SupportTicketController::class, 'store'])->name('support.store');
+    Route::post('/support/{ticket}', [SupportTicketController::class, 'sendMessage'])->name('support.sendMessage');
 
     Route::middleware('admin')->group(function () {
         // Added route for admin dashboard
@@ -55,6 +60,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Added route for reports
         Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
         Route::resource('payment_settings', PaymentSettingsController::class);
+
+        Route::delete('/support/{ticket}', [SupportTicketController::class, 'destroy'])->name('support.destroy');
     });
 });
 
