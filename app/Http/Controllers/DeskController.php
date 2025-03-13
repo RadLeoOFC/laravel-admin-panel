@@ -2,11 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Routing\Controller;
+
 use App\Models\Desk;
 use Illuminate\Http\Request;
 
 class DeskController extends Controller
 {
+        /**
+     * DeskController handles operations related to desks.
+     * This constructor ensures that only admin users can perform create, update, and delete actions.
+     */
+    public function __construct()
+    {
+        // Apply the 'admin' middleware to restrict access
+        // Only admin users can create, store, edit, update, or delete desks
+        $this->middleware('admin')->only(['create', 'store', 'edit', 'update', 'destroy']);
+    }
+
     /**
      * Display a listing of the resource
      */

@@ -1,0 +1,83 @@
+name: Run Laravel Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: secret
+          MYSQL_DATABASE: test_database
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping -h 127.0.0.1 --user=root --password=secret" --health-interval=10s --health-timeout=5s --health-retries=10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          extensions: mbstring, bcmath, pdo_mysql
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Copy environment file
+        run: cp .env.testing .env
+
+      - name: Generate application key
+        run: php artisan key:generate
+
+      - name: Clear and cache configuration
+        run: |
+          php artisan config:clear
+          php artisan cache:clear
+          php artisan config:cache
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install NPM dependencies
+        run: npm install
+
+      - name: Build frontend assets
+        run: npm run build
+
+      - name: Wait for MySQL to be ready
+        run: |
+          echo "Waiting for MySQL to be ready..."
+          for i in {1..30}; do
+            mysqladmin ping -h "127.0.0.1" --user=root --password=secret && break
+            echo "MySQL is unavailable - sleeping"
+            sleep 3
+          done
+          echo "MySQL is up"
+
+      - name: Run database migrations and seeders
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: test_database
+          DB_USERNAME: root
+          DB_PASSWORD: secret
+        run: php artisan migrate --seed --force --no-interaction
+
+      - name: Run tests
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: test_database
+          DB_USERNAME: root
+          DB_PASSWORD: secret
+        run: php artisan test

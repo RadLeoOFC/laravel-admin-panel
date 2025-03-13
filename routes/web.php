@@ -6,6 +6,11 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DeskController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\StripeWebhookController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\PaymentSettingsController;
+use App\Http\Controllers\SupportTicketController;
 use Illuminate\Support\Facades\Route;
 
 // Home page route
@@ -21,7 +26,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     // Admin panel route
-    Route::view('/admin', 'layouts.admin')->name('admin.dashboard');
+    Route::view('/admin', 'layouts.admin')->name('admin.panel');
 
     // Product and category management (restricted to authenticated users)
     Route::resource('products', ProductController::class);
@@ -30,13 +35,34 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Desk and membership management
     Route::resource('desks', DeskController::class);
     Route::resource('memberships', MembershipController::class);
-
-    // Additional membership-related routes
+    
     Route::post('/memberships/{id}/extend', [MembershipController::class, 'extend'])->name('memberships.extend');
-    Route::post('/memberships/{id}/update-payment', [MembershipController::class, 'updatePaymentStatus'])->name('memberships.updatePayment');
+    Route::get('/memberships/{id}/extend', [MembershipController::class, 'showExtendForm'])->name('memberships.showExtendForm');
 
-    // 📌 Added route for reports
-    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    // Routes for displaying the payment form and processing the payment
+    Route::get('/payment/{membership_id}', [PaymentController::class, 'showPaymentForm'])->name('payment.form');
+    Route::post('/payment/process', [PaymentController::class, 'processPayment'])->name('payment.process');
+
+    // Route to handle incoming Stripe webhook events
+    Route::post('/webhook/stripe', [StripeWebhookController::class, 'handle'])->name('webhook.stripe');
+
+    // Routes for technical support
+    Route::get('/support', [SupportTicketController::class, 'index'])->name('support.index');
+    Route::post('/support', [SupportTicketController::class, 'store'])->name('support.store');
+    Route::post('/support/{ticket}', [SupportTicketController::class, 'sendMessage'])->name('support.sendMessage');
+
+    Route::middleware('admin')->group(function () {
+        // Added route for admin dashboard
+        Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+        // Additional membership-related route
+        Route::post('/memberships/{id}/update-payment', [MembershipController::class, 'updatePaymentStatus'])->name('memberships.updatePayment');
+
+        // Added route for reports
+        Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+        Route::resource('payment_settings', PaymentSettingsController::class);
+
+        Route::delete('/support/{ticket}', [SupportTicketController::class, 'destroy'])->name('support.destroy');
+    });
 });
 
 // User profile management (restricted to authenticated users)

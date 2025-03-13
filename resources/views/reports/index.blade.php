@@ -1,9 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
 @extends('layouts.app')
 
-@section('title', 'Reports')
-
 @section('content')
-<h2 class="mb-4">Reports</h2>
+
+<h2 class="fw-bold mb-2" style="font-size: 28px; padding-bottom: 15px; padding-top: 15px;">Reports</h2>
 
 <!-- Filtering form -->
 <form action="{{ route('reports.index') }}" method="GET" class="mb-4">
@@ -41,3 +50,6 @@
     </tbody>
 </table>
 @endsection
+
+</body>
+</html>
