@@ -45,6 +45,16 @@
                 </select>
             </div>
 
+            <div class="mb-3">
+                <label class="form-label">Coordinate X</label>
+                <input type="number" name="coordinates_x" class="form-control" value="{{ $desk->coordinates_x }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Coordinate Y</label>
+                <input type="number" name="coordinates_y" class="form-control" value="{{ $desk->coordinates_y }}" required>
+            </div>
+
             <button type="submit" class="btn btn-primary">Update Desk</button>
         </form>
     </div>

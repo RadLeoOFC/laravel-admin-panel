@@ -3,31 +3,47 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller;
-
 use App\Models\Desk;
+use App\Models\Membership;
 use Illuminate\Http\Request;
 
 class DeskController extends Controller
 {
-        /**
-     * DeskController handles operations related to desks.
-     * This constructor ensures that only admin users can perform create, update, and delete actions.
+    /**
+     * Ограничиваем доступ к CRUD-операциям только для администраторов.
      */
     public function __construct()
     {
-        // Apply the 'admin' middleware to restrict access
-        // Only admin users can create, store, edit, update, or delete desks
         $this->middleware('admin')->only(['create', 'store', 'edit', 'update', 'destroy']);
     }
 
     /**
-     * Display a listing of the resource
+     * Отображение списка столов.
      */
     public function index()
     {
         $desks = Desk::all();
         return view('desks.index', compact('desks'));
     }
+
+    public function map()
+    {
+        $userId = auth()->id();
+    
+        $desks = Desk::all()->map(function ($desk) use ($userId) {
+            $desk->user_booked = $desk->memberships()
+                ->where('user_id', $userId)
+                ->whereDate('end_date', '>=', now())
+                ->exists();
+            return $desk;
+        });
+    
+        return view('desks.map', [
+            'desks' => $desks,
+            'maxX' => $desks->max('coordinates_x'),
+            'maxY' => $desks->max('coordinates_y'),
+        ]);
+    }       
 
     /**
      * Show the form for creating a new resource.
@@ -45,11 +61,13 @@ class DeskController extends Controller
         $request->validate([
             'name' => 'required',
             'location' => 'required',
-            'status' => 'required',
+            'status' => 'required|in:available,occupied,maintenance',
+            'coordinates_x' => 'nullable|integer',
+            'coordinates_y' => 'nullable|integer',
         ]);
-
+    
         Desk::create($request->all());
-
+    
         return redirect()->route('desks.index')->with('success', 'Desk created successfully.');
     }
 
@@ -75,16 +93,21 @@ class DeskController extends Controller
     public function update(Request $request, Desk $desk)
     {
         $request->validate([
-            'name' => 'required',
-            'location' => 'required',
-            'status' => 'required',
-        ]);
-
+            'name' => 'sometimes|string|max:255',
+            'location' => 'sometimes|string|max:255',
+            'status' => 'sometimes|in:available,occupied,maintenance',
+            'coordinates_x' => 'sometimes|integer',
+            'coordinates_y' => 'sometimes|integer',
+        ]);        
+    
         $desk->update($request->all());
-
+    
+        if ($request->ajax()) {
+            return response()->json(['success' => true]);
+        }
+    
         return redirect()->route('desks.index')->with('success', 'Desk updated successfully.');
     }
-
     /**
      * Remove the specified resource from storage.
      */

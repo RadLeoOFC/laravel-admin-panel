@@ -18,6 +18,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/test', function () {
+    return "Маршрут работает!";
+});
+
+Route::get('/desks/map', function () {
+    return "Маршрут работает!";
+});
+
+
+
 // Authenticated routes
 Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard (only for authenticated users)
@@ -33,7 +43,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('categories', CategoryController::class);
     
     // Desk and membership management
+    Route::get('/desks/map', [DeskController::class, 'map'])->name('desks.map');
     Route::resource('desks', DeskController::class);
+    Route::post('/memberships/store', [MembershipController::class, 'store'])->name('memberships.store');
     Route::resource('memberships', MembershipController::class);
     
     Route::post('/memberships/{id}/extend', [MembershipController::class, 'extend'])->name('memberships.extend');

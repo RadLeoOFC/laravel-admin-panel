@@ -43,6 +43,16 @@
                 </select>
             </div>
 
+            <div class="mb-3">
+                <label class="form-label">Coordinate X</label>
+                <input type="number" name="coordinates_x" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Coordinate Y</label>
+                <input type="number" name="coordinates_y" class="form-control" required>
+            </div>
+
             <button type="submit" class="btn btn-success">Create Desk</button>
         </form>
     </div>
